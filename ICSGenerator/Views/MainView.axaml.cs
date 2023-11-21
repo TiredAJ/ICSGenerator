@@ -1,12 +1,11 @@
-using System;
-using System.Diagnostics;
-using System.IO;
-using System.Runtime.CompilerServices;
 using AJICal;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using NodaTime;
+using System;
+using System.Diagnostics;
+using System.IO;
 
 namespace ICSGenerator.Views
 {
@@ -58,19 +57,19 @@ namespace ICSGenerator.Views
 
             Debug.WriteLine(cdp_StartDate.SelectedDate.Value);
 
-            if(cdp_StartDate.SelectedDate.Value > cdp_EndDate.SelectedDate.Value)
+            if (cdp_StartDate.SelectedDate.Value > cdp_EndDate.SelectedDate.Value)
             { cdp_EndDate.SelectedDate = cdp_EndDate.SelectedDate; }
 
-            if(cdp_StartDate.SelectedDate.Value == cdp_EndDate.SelectedDate.Value)
+            if (cdp_StartDate.SelectedDate.Value == cdp_EndDate.SelectedDate.Value)
             {
-                if(tp_StartTime.SelectedTime.Value >= tp_EndTime.SelectedTime.Value)
+                if (tp_StartTime.SelectedTime.Value >= tp_EndTime.SelectedTime.Value)
                 { tp_EndTime.SelectedTime = tp_StartTime.SelectedTime.Value.Add(new TimeSpan(0, 1, 0)); }
             }
         }
 
         public void tswc_AllDay_IsChecked(object _Source, RoutedEventArgs _Args)
         {
-            if((bool)tswc_AllDay.IsChecked)
+            if ((bool)tswc_AllDay.IsChecked)
             {
                 tp_StartTime.IsVisible = false;
                 tp_EndTime.IsVisible = false;
@@ -88,7 +87,8 @@ namespace ICSGenerator.Views
 
             FilePickerSaveOptions FPSO = new FilePickerSaveOptions
             {
-                DefaultExtension = "ics", SuggestedFileName = _CE.Title,
+                DefaultExtension = "ics",
+                SuggestedFileName = _CE.Title,
                 Title = $"Please choose where to save {_CE.Title}.ics"
             };
 
@@ -99,24 +99,24 @@ namespace ICSGenerator.Views
 
             Debug.WriteLine($"Platform: {TL.PlatformImpl.ToString()}");
 
-            var Storage = TL.StorageProvider;;
+            var Storage = TL.StorageProvider; ;
 
-            if(Storage.CanSave && Storage.CanPickFolder)
+            if (Storage.CanSave && Storage.CanPickFolder)
             {
                 //Storage.SaveFilePickerAsync(FPSO).Result;
 
-                using(IStorageFile? ISF = await Storage.SaveFilePickerAsync(FPSO))
+                using (IStorageFile? ISF = await Storage.SaveFilePickerAsync(FPSO))
                 {
-                    if(ISF != null)
+                    if (ISF != null)
                     {
-                        using(Stream Writer = await ISF.OpenWriteAsync())
-                        {_CE.Serialise(Writer);}
+                        using (Stream Writer = await ISF.OpenWriteAsync())
+                        { _CE.Serialise(Writer); }
                     }
                     else
-                    {throw new ArgumentNullException("ISF returned null?");}
+                    { throw new ArgumentNullException("ISF returned null?"); }
 
                 }
-                
+
             }
         }
     }
